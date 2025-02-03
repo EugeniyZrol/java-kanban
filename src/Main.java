@@ -1,12 +1,11 @@
 import Task.*;
 import Manager.TaskManager;
 
-import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
         TaskManager taskManager = new TaskManager();
-        Scanner scanner = new Scanner(System.in);
+
         // Создаем две задачи
         Task firstTask = new Task("Первая задача", "Описание первой задачи", Status.NEW);
         Task secondTask = new Task("Вторая задача", "Описание второй задачи", Status.NEW);
@@ -25,7 +24,7 @@ public class Main {
         Subtask secondSubtask = new Subtask("Вторая подзадача первого эпика",
                 "Описание второй подзадачи", Status.NEW, firstEpic);
         taskManager.addTask(secondSubtask, 0);
-
+        // второй эпик и подзадача
         Epic secondEpic = new Epic("Второй эпик",
                 "Описание второго эпика", Status.NEW);
         taskManager.addTask(secondEpic, 0);
