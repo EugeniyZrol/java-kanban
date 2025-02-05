@@ -3,9 +3,9 @@ package Task;
 import java.util.Objects;
 
 public class Task {
-    private final String name;
+    private String name;
     private int taskId;
-    private final String description;
+    private String description;
     private Status status;
 
    public Task ( String name, String description, Status status ){
