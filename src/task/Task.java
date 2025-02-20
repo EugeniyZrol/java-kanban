@@ -1,11 +1,11 @@
-package Task;
+package task;
 
 import java.util.Objects;
 
 public class Task {
     private String name;
     private int taskId;
-    private String description;
+    private final String description;
     private Status status;
 
    public Task ( String name, String description, Status status ){
@@ -22,6 +22,9 @@ public class Task {
 
     public String getName() {
         return name;
+    }
+    public void setName(String name){
+       this.name = name;
     }
 
     public String getDescription() {
