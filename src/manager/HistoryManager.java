@@ -4,7 +4,7 @@ import task.Task;
 
 public interface HistoryManager {
 
-    void addTaskList(Task task);
+    void add(Task task);
 
     ArrayList<Task> getHistory();
 }

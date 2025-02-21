@@ -14,25 +14,28 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     @Override
-    public void addTaskList(Task task) {
-        String name = task.getName();
-        String description = task.getDescription();
-        Status status = task.getStatus();
-        int taskId = task.getTaskId();
-        Task t = new Task(name, description, status);
-        t.setTaskId(taskId);
+    public void add(Task task) {
+        if (task != null) {
+            String name = task.getName();
+            String description = task.getDescription();
+            Status status = task.getStatus();
+            int taskId = task.getTaskId();
+            Task t = new Task(name, description, status);
+            t.setTaskId(taskId);
+            // Я пробовал без копирования, задача после обновления обновляет и предыдущую версию.
 
-        if(taskHistory.size()<MAX_NUMBER_OF_TASK){
-            taskHistory.add(t);
+            if (taskHistory.size() < MAX_NUMBER_OF_TASK) {
+                taskHistory.add(t);
 
-        } else {
-            taskHistory.removeFirst();
-            taskHistory.add(t);
+            } else {
+                taskHistory.removeFirst();
+                taskHistory.add(t);
+            }
         }
     }
 
     @Override
     public ArrayList<Task> getHistory() {
-        return taskHistory;
+        return new ArrayList<>(taskHistory);
     }
 }

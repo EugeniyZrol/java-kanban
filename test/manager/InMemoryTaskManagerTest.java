@@ -1,25 +1,40 @@
+package manager;
 
-import org.junit.jupiter.api.Test;
 import task.*;
-import manager.*;
 import util.Managers;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static task.Status.NEW;
+import static task.Status.*;
 
+public class InMemoryTaskManagerTest {
 
-class MainTest {
-
-    TaskManager taskManager = Managers.getDefault();
+    static TaskManager taskManager = Managers.getDefault();
     HistoryManager historyManager = Managers.getDefaultHistory();
+
+
+    @Test
+    public void shouldReturnEpicStatusAsNewWhenAllSubtasksInStatusNew(){
+        assertEquals(NEW, taskManager.getEpic().getFirst().getStatus(), "У эпика должен быть статус NEW");
+    }
+
+    @Test
+    public void shouldReturnEpicStatusAsDoneWhenAllSubtasksInStatusDone(){
+        Epic epic = new Epic("epic1", "Описание эпика 1", NEW);
+        taskManager.addEpic(epic);
+        Subtask subtask1 = new Subtask("подзадача 1","Описание подзадачи 1",DONE, epic.getTaskId());
+        taskManager.addSubtask(subtask1);
+        Subtask subtask2 = new Subtask("подзадача 2","Описание подзадачи 2",DONE, epic.getTaskId());
+        taskManager.addSubtask(subtask2);
+        assertEquals(DONE, taskManager.getEpicId(epic.getTaskId()).getStatus(), "У эпика должен быть статус DONE");
+    }
 
     @Test
     void addNewTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         final int taskId = taskManager.addTask(task);
-
         final Task savedTask = taskManager.getTaskId(taskId);
 
         assertNotNull(savedTask, "Задача не найдена.");
@@ -33,22 +48,13 @@ class MainTest {
     }
 
     @Test
-    void add() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
-        HistoryManager historyManager = Managers.getDefaultHistory();
-        historyManager.addTaskList(task);
-        final ArrayList<Task> history = historyManager.getHistory();
-        assertNotNull(history, "История не пустая.");
-        assertEquals(1, history.size(), "История не пустая.");
-    }
-
-    @Test
     void taskEqualsTaskOfId() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         Task task2 = new Task("Test addNewTask", "Test addNewTask description", NEW);
         task2.setTaskId(0);
         assertEquals(task.getTaskId(), task2.getTaskId());
     }
+
     @Test
     void heirsEqualsHeirsOfId(){
         Epic firstEpic = new Epic("Первый эпик", "Описание первого эпика", Status.NEW);

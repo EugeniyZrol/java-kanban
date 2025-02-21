@@ -1,6 +1,6 @@
 
 import manager.TaskManager;
-import manager.inMemoryTaskManager;
+import manager.InMemoryTaskManager;
 import task.*;
 import util.Managers;
 
@@ -45,14 +45,14 @@ public class Main {
         taskManager.updateTask(firstTask);
         taskManager.getTaskId(firstTask.getTaskId());
         taskManager.getEpicId(firstEpic.getTaskId());
-        firstEpic.setStatus(Status.IN_PROGRESS);
+        firstEpic.setName("Очень важная задача");
         taskManager.updateEpic(firstEpic);
         taskManager.getEpicId(firstEpic.getTaskId());
-        taskManager.getEpicId(firstEpic.getTaskId());
+        taskManager.getEpicId(secondEpic.getTaskId());
         taskManager.getEpicId(firstEpic.getTaskId());
         firstSubtask.setStatus(Status.IN_PROGRESS);
         taskManager.updateSubtask(firstSubtask);
-        printAllTasks((inMemoryTaskManager) taskManager);
+        printAllTasks((InMemoryTaskManager) taskManager);
 
 //        System.out.println("Меняем статусы у простой задачи и подзадачи первого эпика");
 //        firstTask.setStatus(Status.IN_PROGRESS);
@@ -104,7 +104,7 @@ public class Main {
     }
 
 
-    private static void printAllTasks(inMemoryTaskManager manager) {
+    private static void printAllTasks(InMemoryTaskManager manager) {
         System.out.println("Задачи:");
         for (Task task : manager.getTasks()) {
             System.out.println(task);
