@@ -38,12 +38,12 @@ public class Main {
         taskManager.addSubtask(thirdSubtask);
 
 
-        taskManager.getTaskId(firstTask.getTaskId());
-        taskManager.getTaskId(firstTask.getTaskId());
-        firstTask.setStatus(Status.IN_PROGRESS);
-        firstTask.setName("Третья задача");
-        taskManager.updateTask(firstTask);
-        taskManager.getTaskId(firstTask.getTaskId());
+        //taskManager.getTaskId(firstTask.getTaskId());
+        Task newFirstTask = new Task("Новая первая задача", "Новое описание первой задачи", Status.DONE);
+
+        taskManager.updateTask(newFirstTask);
+        newFirstTask.setTaskId(1);
+        taskManager.getTaskId(newFirstTask.getTaskId());
         taskManager.getEpicId(firstEpic.getTaskId());
         firstEpic.setName("Очень важная задача");
         taskManager.updateEpic(firstEpic);
