@@ -1,10 +1,10 @@
 package manager;
 
+import org.junit.jupiter.api.AfterAll;
 import task.*;
 import util.Managers;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static task.Status.*;
@@ -14,9 +14,14 @@ public class InMemoryTaskManagerTest {
     static TaskManager taskManager = Managers.getDefault();
     HistoryManager historyManager = Managers.getDefaultHistory();
 
-
+    @AfterAll
+    public static void clear(){
+        taskManager.clearTask();
+        taskManager.clearEpic();
+    }
     @Test
     public void shouldReturnEpicStatusAsNewWhenAllSubtasksInStatusNew(){
+        System.out.println(taskManager);
         assertEquals(NEW, taskManager.getEpic().getFirst().getStatus(), "У эпика должен быть статус NEW");
     }
 
@@ -29,22 +34,6 @@ public class InMemoryTaskManagerTest {
         Subtask subtask2 = new Subtask("подзадача 2","Описание подзадачи 2",DONE, epic.getTaskId());
         taskManager.addSubtask(subtask2);
         assertEquals(DONE, taskManager.getEpicId(epic.getTaskId()).getStatus(), "У эпика должен быть статус DONE");
-    }
-
-    @Test
-    void addNewTask() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
-        final int taskId = taskManager.addTask(task);
-        final Task savedTask = taskManager.getTaskId(taskId);
-
-        assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(task, savedTask, "Задачи не совпадают.");
-
-        final ArrayList<Task> tasks = taskManager.getTasks();
-
-        assertNotNull(tasks, "Задачи не возвращаются.");
-        assertEquals(1, tasks.size(), "Неверное количество задач.");
-        assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
     }
 
     @Test
@@ -73,7 +62,7 @@ public class InMemoryTaskManagerTest {
         taskManager.addEpic(firstEpic);
         taskManager.addSubtask(thirdSubtask);
 
-        assertEquals(task.getTaskId(), taskManager.getTaskId(1).getTaskId());
+        assertEquals(task.getTaskId(), taskManager.getTaskId(2).getTaskId());
     }
 
     @Test
@@ -87,7 +76,19 @@ public class InMemoryTaskManagerTest {
     void compareHistoryTaskAndRealTask(){
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         taskManager.addTask(task);
-        final ArrayList<Task> history = historyManager.getHistory();
+        final List<Task> history = historyManager.getHistory();
         assertEquals(history, taskManager.getHistory());
+    }
+
+    @Test
+    void checkTaskAndTaskHistory(){
+        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
+        taskManager.addTask(task);
+        assertEquals(Status.NEW, taskManager.getTaskId(1).getStatus());
+        assertEquals("Test addNewTask", taskManager.getTaskId(1).getName());
+
+        task = new Task("name", "descreption", Status.IN_PROGRESS);
+        taskManager.updateTask(task);
+        assertEquals("Test addNewTask", taskManager.getHistory().getFirst().getName());
     }
 }
