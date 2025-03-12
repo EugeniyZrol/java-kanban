@@ -8,23 +8,26 @@ public class Task {
     private final String description;
     private Status status;
 
-   public Task ( String name, String description, Status status ){
-       this.name = name;
-       this.description = description;
-       this.status = status;
-   }
-    public void setTaskId (int taskId) {
-       this.taskId = taskId;
+    public Task(String name, String description, Status status) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
     }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
+
     public int getTaskId() {
-       return taskId;
+        return taskId;
     }
 
     public String getName() {
         return name;
     }
-    public void setName(String name){
-       this.name = name;
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -34,8 +37,9 @@ public class Task {
     public Status getStatus() {
         return status;
     }
+
     public void setStatus(Status status) {
-       this.status = status;
+        this.status = status;
     }
 
     @Override
@@ -53,10 +57,10 @@ public class Task {
     @Override
     public String toString() {
         return
-            " Название: " + name.toUpperCase() +
-            ", Описание: " + description +
-            ", ID=" + taskId +
-            ", status=" + status +
-            '}';
+                " Название: " + name.toUpperCase() +
+                        ", Описание: " + description +
+                        ", ID=" + taskId +
+                        ", status=" + status +
+                        '}';
     }
 }
