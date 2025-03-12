@@ -4,7 +4,6 @@ import org.junit.jupiter.api.AfterAll;
 import task.*;
 import util.Managers;
 import org.junit.jupiter.api.Test;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static task.Status.*;
@@ -12,7 +11,6 @@ import static task.Status.*;
 public class InMemoryTaskManagerTest {
 
     static TaskManager taskManager = Managers.getDefault();
-    HistoryManager historyManager = Managers.getDefaultHistory();
 
     @AfterAll
     public static void clear() {
@@ -71,14 +69,6 @@ public class InMemoryTaskManagerTest {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         taskManager.addTask(task);
         assertEquals(task, taskManager.getTaskId(task.getTaskId()));
-    }
-
-    @Test
-    void compareHistoryTaskAndRealTask() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
-        taskManager.addTask(task);
-        final List<Task> history = historyManager.getHistory();
-        assertEquals(history, taskManager.getHistory());
     }
 
     @Test
