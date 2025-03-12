@@ -1,23 +1,23 @@
 package manager;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Status;
 import task.Task;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 
 public class InMemoryHistoryManagerTest {
 
-        private HistoryManager historyManager;
+    private HistoryManager historyManager;
 
-        private  Task task = new Task( "Задача 1", "Описание 1", Status.NEW);
-        private  Task task2 = new Task( "Задача 2", "Описание 2", Status.IN_PROGRESS);
-        private  Task task3 = new Task( "Задача 3", "Описание 3", Status.DONE);
+    private final Task task = new Task("Задача 1", "Описание 1", Status.NEW);
+    private final Task task2 = new Task("Задача 2", "Описание 2", Status.IN_PROGRESS);
+    private final Task task3 = new Task("Задача 3", "Описание 3", Status.DONE);
 
     @BeforeEach
     void beforeEach() {
@@ -39,12 +39,12 @@ public class InMemoryHistoryManagerTest {
     void add_shouldReturnNullIfTaskIsEmpty() {
         historyManager.add(null);
 
-        assertTrue(historyManager.getHistory().isEmpty());
+        Assertions.assertTrue(historyManager.getHistory().isEmpty());
     }
 
     @Test
     void add_shouldReturnAnEmptyListIfThereIsNoHistory() {
-        assertTrue(historyManager.getHistory().isEmpty());
+        Assertions.assertTrue(historyManager.getHistory().isEmpty());
     }
 
     @Test

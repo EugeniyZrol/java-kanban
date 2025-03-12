@@ -15,23 +15,24 @@ public class InMemoryTaskManagerTest {
     HistoryManager historyManager = Managers.getDefaultHistory();
 
     @AfterAll
-    public static void clear(){
+    public static void clear() {
         taskManager.clearTask();
         taskManager.clearEpic();
     }
+
     @Test
-    public void shouldReturnEpicStatusAsNewWhenAllSubtasksInStatusNew(){
+    public void shouldReturnEpicStatusAsNewWhenAllSubtasksInStatusNew() {
         System.out.println(taskManager);
         assertEquals(NEW, taskManager.getEpic().getFirst().getStatus(), "У эпика должен быть статус NEW");
     }
 
     @Test
-    public void shouldReturnEpicStatusAsDoneWhenAllSubtasksInStatusDone(){
+    public void shouldReturnEpicStatusAsDoneWhenAllSubtasksInStatusDone() {
         Epic epic = new Epic("epic1", "Описание эпика 1", NEW);
         taskManager.addEpic(epic);
-        Subtask subtask1 = new Subtask("подзадача 1","Описание подзадачи 1",DONE, epic.getTaskId());
+        Subtask subtask1 = new Subtask("подзадача 1", "Описание подзадачи 1", DONE, epic.getTaskId());
         taskManager.addSubtask(subtask1);
-        Subtask subtask2 = new Subtask("подзадача 2","Описание подзадачи 2",DONE, epic.getTaskId());
+        Subtask subtask2 = new Subtask("подзадача 2", "Описание подзадачи 2", DONE, epic.getTaskId());
         taskManager.addSubtask(subtask2);
         assertEquals(DONE, taskManager.getEpicId(epic.getTaskId()).getStatus(), "У эпика должен быть статус DONE");
     }
@@ -45,7 +46,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void heirsEqualsHeirsOfId(){
+    void heirsEqualsHeirsOfId() {
         Epic firstEpic = new Epic("Первый эпик", "Описание первого эпика", Status.NEW);
         Epic secondEpic = new Epic("Второй эпик", "Описание второго эпика", Status.NEW);
         secondEpic.setTaskId(0);
@@ -53,7 +54,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addTaskInMemoryTaskManager(){
+    void addTaskInMemoryTaskManager() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         Epic firstEpic = new Epic("Первый эпик", "Описание первого эпика", Status.NEW);
         Subtask thirdSubtask = new Subtask("Подзадача второго эпика",
@@ -66,14 +67,14 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void comparingFieldsAfterAddingManager(){
+    void comparingFieldsAfterAddingManager() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         taskManager.addTask(task);
         assertEquals(task, taskManager.getTaskId(task.getTaskId()));
     }
 
     @Test
-    void compareHistoryTaskAndRealTask(){
+    void compareHistoryTaskAndRealTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         taskManager.addTask(task);
         final List<Task> history = historyManager.getHistory();
@@ -81,7 +82,7 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    void checkTaskAndTaskHistory(){
+    void checkTaskAndTaskHistory() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         taskManager.addTask(task);
         assertEquals(Status.NEW, taskManager.getTaskId(1).getStatus());

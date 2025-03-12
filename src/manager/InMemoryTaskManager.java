@@ -152,7 +152,7 @@ public class InMemoryTaskManager implements TaskManager {
             subtasks.remove(id);
             updateStatusOfEpic(epics.get(epicId));
         }
-         historyManager.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
@@ -203,7 +203,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
         } else {
             epic.setStatus(Status.NEW);
-       }
+        }
     }
 }
 
