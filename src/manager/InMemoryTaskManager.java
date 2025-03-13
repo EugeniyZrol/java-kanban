@@ -1,6 +1,5 @@
 package manager;
 
-
 import task.*;
 import util.Managers;
 import java.util.List;
@@ -55,17 +54,29 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearTask() {
+        for (Task task : tasks.values()) {
+            historyManager.remove(task.getTaskId());
+        }
         tasks.clear();
     }
 
     @Override
     public void clearEpic() {
+        for (Epic epic : epics.values()) {
+            historyManager.remove(epic.getTaskId());
+        }
+        for (Subtask subtask : subtasks.values()) {
+            historyManager.remove(subtask.getTaskId());
+        }
         subtasks.clear();
         epics.clear();
     }
 
     @Override
     public void clearSubtask() {
+        for (Subtask subtask : subtasks.values()) {
+            historyManager.remove(subtask.getTaskId());
+        }
         subtasks.clear();
         for (Integer id : epics.keySet()) {
             Epic epic = epics.get(id);
