@@ -4,6 +4,7 @@ import manager.InMemoryTaskManager;
 import task.*;
 import util.Managers;
 
+
 public class Main {
 
     public static void main(String[] args) {
@@ -25,7 +26,7 @@ public class Main {
         taskManager.addSubtask(firstSubtask);
 
         Subtask secondSubtask = new Subtask("Вторая подзадача первого эпика",
-                "Описание второй подзадачи", Status.NEW, firstEpic.getTaskId());
+                "Описание второй подзадачи", Status.IN_PROGRESS, firstEpic.getTaskId());
         taskManager.addSubtask(secondSubtask);
 
         // второй эпик и подзадача
@@ -34,71 +35,76 @@ public class Main {
         taskManager.addEpic(secondEpic);
 
         Subtask thirdSubtask = new Subtask("Подзадача второго эпика",
-                "Описание подзадачи второго эпика", Status.NEW, secondEpic.getTaskId());
+                "Описание подзадачи второго эпика", Status.IN_PROGRESS, secondEpic.getTaskId());
         taskManager.addSubtask(thirdSubtask);
 
 
-        //taskManager.getTaskId(firstTask.getTaskId());
-        Task newFirstTask = new Task("Новая первая задача", "Новое описание первой задачи", Status.DONE);
+        taskManager.getTaskId(firstTask.getTaskId());
+        int id = firstTask.getTaskId();
+        firstTask = new Task("Новая первая задача", "Новое описание первой задачи", Status.DONE);
+        firstTask.setTaskId(id);
 
-        taskManager.updateTask(newFirstTask);
-        newFirstTask.setTaskId(1);
-        taskManager.getTaskId(newFirstTask.getTaskId());
-        taskManager.getEpicId(firstEpic.getTaskId());
-        firstEpic.setName("Очень важная задача");
-        taskManager.updateEpic(firstEpic);
+        taskManager.updateTask(firstTask);
+
+        taskManager.getTaskId(firstTask.getTaskId());
         taskManager.getEpicId(firstEpic.getTaskId());
         taskManager.getEpicId(secondEpic.getTaskId());
         taskManager.getEpicId(firstEpic.getTaskId());
-        firstSubtask.setStatus(Status.IN_PROGRESS);
-        taskManager.updateSubtask(firstSubtask);
+        taskManager.getEpicId(firstEpic.getTaskId());
+        taskManager.getEpicId(firstEpic.getTaskId());
+        taskManager.getEpicId(firstEpic.getTaskId());
+        taskManager.getSubtaskId(firstSubtask.getTaskId());
+
         printAllTasks((InMemoryTaskManager) taskManager);
 
-//        System.out.println("Меняем статусы у простой задачи и подзадачи первого эпика");
-//        firstTask.setStatus(Status.IN_PROGRESS);
-//        taskManager.updateTask(firstTask);
-//        secondSubtask.setStatus(Status.IN_PROGRESS);
-//        taskManager.updateSubtask(secondSubtask);
-//        printAllTasks((inMemoryTaskManager) taskManager);
-//
-//
-//        System.out.println("Меняем статус у подзадачи второго эпика");
-//        thirdSubtask.setStatus(Status.DONE);
-//        taskManager.updateSubtask(thirdSubtask);
-//        printAllTasks((inMemoryTaskManager) taskManager);
-//
-//        System.out.println("Меняем статус эпика");
-//        firstEpic.setStatus(Status.DONE);
-//        taskManager.updateEpic(firstEpic);
-//        printAllTasks((inMemoryTaskManager) taskManager);
-//
-//        System.out.println("Получаем задачу по ID");
-//        Task task = taskManager.getTaskId(secondTask.getTaskId());
-//        System.out.println(task);
-//
-//        System.out.println("вывод списка подклассов эпика");
-//        System.out.println(taskManager.getEpicSubtasks(firstEpic.getTaskId()));
-//
-//        System.out.println("Удаляем подзадачу по ID");
-//        taskManager.deleteSubtaskId(secondEpic.getTaskId());
-//        printAllTasks((inMemoryTaskManager) taskManager);
-//
-//        System.out.println("Удаляем эпик по ID");
-//        taskManager.deleteEpicId(firstEpic.getTaskId());
-//        printAllTasks((inMemoryTaskManager) taskManager);
-//
-//        System.out.println("Список вызванных задач: ");
-//        System.out.println(taskManager.getHistory());
-//        System.out.println("убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.");
-//        secondTask.setStatus(Status.IN_PROGRESS);
-//        secondTask.setName("Третья задача");
-//        taskManager.updateTask(firstTask);
-//        System.out.println(taskManager.getHistory());
-//
-//        System.out.println("Удаление всех задач...");
-//        taskManager.clearTask();
-//        taskManager.clearEpic();
-//        printAllTasks((inMemoryTaskManager) taskManager);
+        System.out.println("Меняем статусы у простой задачи и подзадачи первого эпика");
+        firstTask.setStatus(Status.IN_PROGRESS);
+        taskManager.updateTask(firstTask);
+        secondSubtask.setStatus(Status.IN_PROGRESS);
+        taskManager.updateSubtask(secondSubtask);
+        printAllTasks((InMemoryTaskManager) taskManager);
+
+
+        System.out.println("Меняем статус у подзадачи второго эпика");
+        thirdSubtask.setStatus(Status.DONE);
+        taskManager.updateSubtask(thirdSubtask);
+        printAllTasks((InMemoryTaskManager) taskManager);
+
+        System.out.println("Меняем статус эпика");
+        firstEpic.setStatus(Status.DONE);
+        taskManager.updateEpic(firstEpic);
+        printAllTasks((InMemoryTaskManager) taskManager);
+
+        System.out.println("Получаем задачу по ID");
+        Task task = taskManager.getTaskId(secondTask.getTaskId());
+        System.out.println(task);
+
+        System.out.println("вывод списка подклассов эпика");
+        System.out.println(taskManager.getEpicSubtasks(firstEpic.getTaskId()));
+
+        System.out.println("Удаляем подзадачу по ID");
+        taskManager.deleteSubtaskId(secondEpic.getTaskId());
+        printAllTasks((InMemoryTaskManager) taskManager);
+
+        System.out.println("Удаляем эпик по ID");
+        taskManager.deleteEpicId(firstEpic.getTaskId());
+        printAllTasks((InMemoryTaskManager) taskManager);
+
+        System.out.println("Список вызванных задач: ");
+        System.out.println(taskManager.getHistory());
+        System.out.println("убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.");
+        secondTask.setStatus(Status.IN_PROGRESS);
+        secondTask.setName("Третья задача");
+        taskManager.updateTask(firstTask);
+        taskManager.getEpicId(secondEpic.getTaskId());
+        System.out.println(taskManager.getHistory());
+
+
+
+        System.out.println("Удаление всех задач...");
+        taskManager.clearTask();
+        taskManager.clearEpic();
+        printAllTasks((InMemoryTaskManager) taskManager);
 
 
     }
