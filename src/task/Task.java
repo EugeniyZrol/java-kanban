@@ -56,11 +56,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return
-                " Название: " + name.toUpperCase() +
-                        ", Описание: " + description +
-                        ", ID=" + taskId +
-                        ", status=" + status +
-                        '}';
+        return taskId + "," + TypeTask.TASK + "," + name + "," + status + "," + description;
     }
 }
