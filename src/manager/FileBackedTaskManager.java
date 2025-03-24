@@ -177,6 +177,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         save();
     }
 // реализуем пользовательский сценарий
+
     public static void main(String[] args) {
         final File file = new File("testFile4");
         FileBackedTaskManager fileManager = new FileBackedTaskManager(file.toPath());
