@@ -15,7 +15,7 @@ public class Managers {
         return new InMemoryHistoryManager();
     }
 
-    public static InMemoryTaskManager getDefaultInMemory(){
+    public static InMemoryTaskManager getDefaultInMemory() {
         return new InMemoryTaskManager();
     }
 }
