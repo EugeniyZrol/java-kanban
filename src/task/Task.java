@@ -7,11 +7,13 @@ public class Task {
     private int taskId;
     private final String description;
     private Status status;
+    protected TypeTask typeTask;
 
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.typeTask = TypeTask.TASK;
     }
 
     public void setTaskId(int taskId) {
@@ -40,6 +42,14 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public TypeTask getType() {
+        return typeTask;
+    }
+
+    public Integer getEpicId() {
+        return null;
     }
 
     @Override

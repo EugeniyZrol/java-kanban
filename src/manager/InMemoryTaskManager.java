@@ -11,7 +11,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Task> tasks;
     protected final Map<Integer, Epic> epics;
     protected final Map<Integer, Subtask> subtasks;
-    private int current;
+    protected int current;
     private final HistoryManager historyManager;
 
     public InMemoryTaskManager() {
@@ -24,6 +24,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int currentId() {
         return ++current;
+    }
+
+    public int getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(int current) {
+        this.current = current;
     }
 
     @Override

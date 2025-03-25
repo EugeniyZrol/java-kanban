@@ -2,7 +2,7 @@ package manager;
 
 import exception.ManagerSaveException;
 import task.*;
-
+import converter.TaskConverter;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -11,65 +11,30 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     protected Path path;
     private static final String CAP = "id,type,name,status,description,epic";
+    private final TaskConverter taskConverter = new TaskConverter();
 
-    FileBackedTaskManager(Path path) {
+    public FileBackedTaskManager(Path path) {
         this.path = path;
     }
 
     public void save() {
         try (FileWriter fileRecord = new FileWriter(path.toString())) {
             fileRecord.write(CAP + "\n");
-            for (Integer key : tasks.keySet()) {
-                fileRecord.write(tasks.get(key).toString() + "\n");
+            for (Task value : tasks.values()) {
+                fileRecord.write(taskConverter.taskToString(value) + "\n");
             }
-            for (Integer key : epics.keySet()) {
-                fileRecord.write(epics.get(key).toString() + "\n");
+            for (Epic value : epics.values()) {
+                fileRecord.write(taskConverter.taskToString(value) + "\n");
             }
-            for (Integer key : subtasks.keySet()) {
-                fileRecord.write(subtasks.get(key).toString() + "\n");
+            for (Subtask value : subtasks.values()) {
+                fileRecord.write(taskConverter.taskToString(value) + "\n");
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка записи в файл");
         }
     }
 
-    private static Task fromString(String value) throws IllegalArgumentException {
-        String[] split = value.split(",", 6);
-        Status status = switch (split[3]) {
-            case "NEW" -> Status.NEW;
-            case "IN_PROGRESS" -> Status.IN_PROGRESS;
-            case "DONE" -> Status.DONE;
-            default -> throw new IllegalArgumentException("Ошибка статуса задачи в файле данных!");
-        };
-
-        Task task;
-        int taskId = Integer.parseInt(split[0]);
-
-        switch (split[1]) {
-            case "TASK":
-                task = new Task(split[2], split[4], status);
-                task.setTaskId(taskId);
-                break;
-
-            case "EPIC":
-                task = new Epic(split[2], split[4], status);
-                task.setTaskId(taskId);
-                break;
-
-            case "SUBTASK":
-                int epicId = Integer.parseInt(split[5].trim());
-                Epic epic = new Epic("", "", Status.NEW); // пустышка для передачи EpicId
-                epic.setTaskId(epicId);
-                task = new Subtask(split[2], split[4], status, epicId);
-                task.setTaskId(taskId);
-                break;
-            default:
-                throw new IllegalArgumentException("Ошибка типа задачи в файле данных!");
-        }
-        return task;
-    }
-
-    static FileBackedTaskManager loadFromFile(Path path) {
+    public static FileBackedTaskManager loadFromFile(Path path) {
         FileBackedTaskManager manager = new FileBackedTaskManager(path);
         try (BufferedReader br = new BufferedReader(new FileReader(path.toString(), StandardCharsets.UTF_8))) {
             br.readLine();
@@ -78,28 +43,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 if (line == null) {
                     break;
                 }
-                Task task = fromString(line);
-                switch (getType(task)) {
-                    case "TASK" -> manager.addTask(task);
-                    case "EPIC" -> manager.addEpic((Epic) task);
-                    case "SUBTASK" -> manager.addSubtask((Subtask) task);
+                Task task = TaskConverter.fromString(line);
+
+                switch (task.getType()) {
+                    case TASK -> manager.tasks.put(task.getTaskId(), task);
+                    case EPIC -> manager.epics.put(task.getTaskId(), (Epic) task);
+                    case SUBTASK -> manager.subtasks.put(task.getTaskId(), (Subtask) task);
+                }
+                if (manager.getCurrent() < task.getTaskId()) {
+                    manager.setCurrent(task.getTaskId());
                 }
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка чтения данных.");
         }
         return manager;
-    }
-
-
-    private static String getType(Task task) {
-        if (task instanceof Epic) {
-            return "EPIC";
-        } else if (task instanceof Subtask) {
-            return "SUBTASK";
-        } else {
-            return "TASK";
-        }
     }
 
     @Override
