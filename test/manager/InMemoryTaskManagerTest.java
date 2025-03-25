@@ -10,7 +10,7 @@ import static task.Status.*;
 
 public class InMemoryTaskManagerTest {
 
-    static TaskManager taskManager = Managers.getDefault();
+    static TaskManager taskManager = Managers.getDefaultInMemory();
 
     @AfterAll
     public static void clear() {
