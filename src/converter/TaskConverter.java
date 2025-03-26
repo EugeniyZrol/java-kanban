@@ -4,9 +4,14 @@ import task.*;
 
 public class TaskConverter {
 
-    public String taskToString(Task task) {
-        return task.getTaskId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + ","
-                + task.getDescription() + "," + task.getEpicId();
+    public static String taskToString(Task task) {
+        String toString;
+        toString = task.getTaskId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + ","
+                        + task.getDescription() + ",";
+        if (task instanceof Subtask) {
+            toString = toString + task.getEpicId();
+        }
+        return toString;
     }
 
     public static Task fromString(String value) throws IllegalArgumentException {

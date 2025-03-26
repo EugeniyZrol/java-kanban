@@ -11,7 +11,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     protected Path path;
     private static final String CAP = "id,type,name,status,description,epic";
-    private final TaskConverter taskConverter = new TaskConverter();
 
     public FileBackedTaskManager(Path path) {
         this.path = path;
@@ -21,13 +20,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         try (FileWriter fileRecord = new FileWriter(path.toString())) {
             fileRecord.write(CAP + "\n");
             for (Task value : tasks.values()) {
-                fileRecord.write(taskConverter.taskToString(value) + "\n");
+                fileRecord.write(TaskConverter.taskToString(value) + "\n");
             }
             for (Epic value : epics.values()) {
-                fileRecord.write(taskConverter.taskToString(value) + "\n");
+                fileRecord.write(TaskConverter.taskToString(value) + "\n");
             }
             for (Subtask value : subtasks.values()) {
-                fileRecord.write(taskConverter.taskToString(value) + "\n");
+                fileRecord.write(TaskConverter.taskToString(value) + "\n");
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Произошла ошибка записи в файл");

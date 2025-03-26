@@ -30,7 +30,7 @@ public class InMemoryTaskManager implements TaskManager {
         return current;
     }
 
-    public void setCurrent(int current) {
+    protected void setCurrent(int current) {
         this.current = current;
     }
 
