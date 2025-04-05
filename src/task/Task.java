@@ -42,6 +42,14 @@ public class Task {
         this.status = status;
     }
 
+    public TypeTask getType() {
+        return TypeTask.TASK;
+    }
+
+    public Integer getEpicId() {
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -56,11 +64,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return
-                " Название: " + name.toUpperCase() +
-                        ", Описание: " + description +
-                        ", ID=" + taskId +
-                        ", status=" + status +
-                        '}';
+        return taskId + "," + TypeTask.TASK + "," + name + "," + status + "," + description;
     }
 }

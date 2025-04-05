@@ -1,4 +1,5 @@
 package task;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,15 +31,13 @@ public class Epic extends Task {
         subtasksId.remove(id);
     }
 
+    public TypeTask getType() {
+        return TypeTask.EPIC;
+    }
+
     @Override
     public String toString() {
-        List<Integer> subtaskIds = new ArrayList<>(subtasksId);
-        return " Название " + super.getName().toUpperCase() +
-                ", описание: " + super.getDescription().toUpperCase() +
-                " (" + super.getStatus() +
-                ", id=" + super.getTaskId() +
-                ", subIds=" + subtaskIds +
-                ")";
+        return getTaskId() + "," + TypeTask.EPIC + "," + getName() + "," + getStatus() + "," + getDescription();
     }
 }
 

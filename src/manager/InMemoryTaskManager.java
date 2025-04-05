@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, Epic> epics;
-    private final Map<Integer, Subtask> subtasks;
-    private int current;
+    protected final Map<Integer, Task> tasks;
+    protected final Map<Integer, Epic> epics;
+    protected final Map<Integer, Subtask> subtasks;
+    protected int current;
     private final HistoryManager historyManager;
 
     public InMemoryTaskManager() {
@@ -24,6 +24,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int currentId() {
         return ++current;
+    }
+
+    public int getCurrent() {
+        return current;
+    }
+
+    protected void setCurrent(int current) {
+        this.current = current;
     }
 
     @Override
