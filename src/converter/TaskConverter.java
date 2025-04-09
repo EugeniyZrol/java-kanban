@@ -1,13 +1,15 @@
 package converter;
 
 import task.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class TaskConverter {
 
     public static String taskToString(Task task) {
         String toString;
         toString = task.getTaskId() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + ","
-                        + task.getDescription() + ",";
+                + task.getDescription() + "," + task.getDuration() + "," + task.getStartTime() + ",";
         if (task instanceof Subtask) {
             toString = toString + task.getEpicId();
         }
@@ -16,12 +18,14 @@ public class TaskConverter {
 
     public static Task fromString(String value) throws IllegalArgumentException {
         Task task;
-        String[] split = value.split(",", 6);
+        String[] split = value.split(",", 8);
         String statusValue = split[3];
         int taskId = Integer.parseInt(split[0]);
         String name = split[2];
         String description = split[4];
         String typeTask = split[1];
+        Duration duration = Duration.parse(split[5]);
+        LocalDateTime startTime = LocalDateTime.parse(split[6]);
 
         Status status = switch (Status.valueOf(statusValue)) {
             case NEW -> Status.NEW;
@@ -31,16 +35,16 @@ public class TaskConverter {
 
         switch (TypeTask.valueOf(typeTask)) {
             case TASK:
-                task = new Task(name, description, status);
+                task = new Task(name, description, status, duration, startTime);
                 task.setTaskId(taskId);
                 break;
             case EPIC:
-                task = new Epic(name, description, status);
+                task = new Epic(name, description, status, duration, startTime);
                 task.setTaskId(taskId);
                 break;
             case SUBTASK:
-                int epicId = Integer.parseInt(split[5].trim());
-                task = new Subtask(name, description, status, epicId);
+                int epicId = Integer.parseInt(split[7].trim());
+                task = new Subtask(name, description, status, duration, startTime, epicId);
                 task.setTaskId(taskId);
                 break;
             default:

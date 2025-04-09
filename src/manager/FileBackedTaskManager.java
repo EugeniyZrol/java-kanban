@@ -6,11 +6,13 @@ import converter.TaskConverter;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
 
     protected Path path;
-    private static final String CAP = "id,type,name,status,description,epic";
+    private static final String CAP = "id,type,name,status,description,duration,startTime,epic";
 
     public FileBackedTaskManager(Path path) {
         this.path = path;
@@ -19,6 +21,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     public void save() {
         try (FileWriter fileRecord = new FileWriter(path.toString())) {
             fileRecord.write(CAP + "\n");
+
             for (Task value : tasks.values()) {
                 fileRecord.write(TaskConverter.taskToString(value) + "\n");
             }
@@ -96,24 +99,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public int addTask(Task task) {
+    public void addTask(Task task) {
         super.addTask(task);
         save();
-        return task.getTaskId();
     }
 
     @Override
-    public int addSubtask(Subtask subtask) {
+    public void addSubtask(Subtask subtask) {
         super.addSubtask(subtask);
         save();
-        return subtask.getTaskId();
     }
 
     @Override
-    public int addEpic(Epic epic) {
+    public void addEpic(Epic epic) {
         super.addEpic(epic);
         save();
-        return epic.getTaskId();
     }
 
     @Override
@@ -139,35 +139,36 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         final File file = new File("testFile4");
         FileBackedTaskManager fileManager = new FileBackedTaskManager(file.toPath());
         InMemoryTaskManager taskManager;
+        LocalDateTime now = LocalDateTime.now();
 
-        Task firstTask = new Task("Первая задача", "Описание первой задачи", Status.NEW);
-        Task secondTask = new Task("Вторая задача", "Описание второй задачи", Status.NEW);
+        Task firstTask = new Task("Первая задача", "Описание первой задачи", Status.NEW, Duration.ofMinutes(30), now);
+        Task secondTask = new Task("Вторая задача", "Описание второй задачи", Status.NEW, Duration.ofMinutes(30), now.plusHours(1));
         fileManager.addTask(firstTask);
         fileManager.addTask(secondTask);
 
         Epic firstEpic = new Epic("Первый эпик",
-                "Описание первого эпика", Status.NEW);
+                "Описание первого эпика", Status.NEW, Duration.ofMinutes(30), now.plusHours(2));
         fileManager.addEpic(firstEpic);
 
         Subtask firstSubtask = new Subtask("Первая подзадача первого эпика",
-                "Описание первой подзадачи", Status.NEW, firstEpic.getTaskId());
+                "Описание первой подзадачи", Status.IN_PROGRESS, Duration.ofMinutes(30), now.plusHours(3), firstEpic.getTaskId());
         fileManager.addSubtask(firstSubtask);
 
         Subtask secondSubtask = new Subtask("Вторая подзадача первого эпика",
-                "Описание второй подзадачи", Status.IN_PROGRESS, firstEpic.getTaskId());
+                "Описание второй подзадачи", Status.IN_PROGRESS, Duration.ofMinutes(30), now.plusHours(4), firstEpic.getTaskId());
         fileManager.addSubtask(secondSubtask);
 
         Epic secondEpic = new Epic("Второй эпик",
-                "Описание второго эпика", Status.NEW);
+                "Описание второго эпика", Status.NEW, Duration.ofMinutes(30), now.plusHours(5));
         fileManager.addEpic(secondEpic);
 
         Subtask thirdSubtask = new Subtask("Подзадача второго эпика",
-                "Описание подзадачи второго эпика", Status.IN_PROGRESS, secondEpic.getTaskId());
+                "Описание подзадачи второго эпика", Status.DONE, Duration.ofMinutes(30), now.plusHours(6), secondEpic.getTaskId());
         fileManager.addSubtask(thirdSubtask);
-
         taskManager = loadFromFile(file.toPath());
         printAllTasks(fileManager);
         printAllTasks(taskManager);
+        System.out.println(fileManager.getPrioritizedTasks());
     }
 
     private static void printAllTasks(InMemoryTaskManager manager) {

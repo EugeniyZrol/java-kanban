@@ -3,6 +3,9 @@ package manager;
 import task.Subtask;
 import task.Task;
 import  task.Epic;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TaskManager {
@@ -24,9 +27,9 @@ public interface TaskManager {
 
     Task getTaskId(Integer id);
 
-    Epic getEpicId(Integer id);
+    void getEpicId(Integer id);
 
-    Subtask getSubtaskId(Integer id);
+    void getSubtaskId(Integer id);
 
     void updateTask(Task task);
 
@@ -34,11 +37,11 @@ public interface TaskManager {
 
     void updateSubtask(Subtask subtask);
 
-    int addTask(Task task);
+    void addTask(Task task);
 
-    int addSubtask(Subtask subtask);
+    void addSubtask(Subtask subtask);
 
-    int addEpic(Epic epic);
+    void addEpic(Epic epic);
 
     void deleteTaskId(int id);
 
@@ -47,4 +50,12 @@ public interface TaskManager {
     void deleteEpicId(int id);
 
     List<Task> getHistory();
+
+    LocalDateTime getStartTime(Epic epic);
+
+    void getEndTime(Epic epic);
+
+    boolean overlappingTask(Task task1, Task task2);
+
+    Duration getDuration(Epic epic);
 }

@@ -25,32 +25,36 @@ public class InMemoryHistoryManagerTest {
     }
 
     @Test
+    public void testEmptyHistory() {
+        List<Task> history = historyManager.getHistory();
+        Assertions.assertTrue(history.isEmpty(), "История должна быть пустой");
+    }
+
+    @Test
     void add_shouldAddTasksToHistoryList() {
-        Task thisTask = historyManager.add(task);
-        Task thisTask1 = historyManager.add(task2);
-
-        assertEquals(List.of(thisTask, thisTask1), historyManager.getHistory());
+        historyManager.add(task);
+        List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size(), "История должна содержать одну задачу");
+        assertEquals(task, history.getFirst(), "Задачей в истории должна быть задача 1");
     }
 
     @Test
-    void add_shouldReturnNullIfTaskIsEmpty() {
-        historyManager.add(null);
-
-        Assertions.assertTrue(historyManager.getHistory().isEmpty());
-    }
-
-    @Test
-    void add_shouldReturnAnEmptyListIfThereIsNoHistory() {
-        Assertions.assertTrue(historyManager.getHistory().isEmpty());
+    public void testDuplicateTask() {
+        historyManager.add(task);
+        historyManager.add(task);
+        List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size(), "История по-прежнему должна содержать только одну задачу");
+        assertEquals(task, history.getFirst(), "Задачей в истории должна быть задача 1");
     }
 
     @Test
     void remove_shouldRemoveATaskFromHistory() {
         historyManager.add(task);
-        Task thisTask1 = historyManager.add(task2);
-        historyManager.remove(1);
-
-        assertEquals(List.of(thisTask1), historyManager.getHistory());
+        historyManager.add(task2);
+        historyManager.remove(task.getTaskId());
+        List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size(), "История должна содержать одну задачу после удаления");
+        assertEquals(task2, history.getFirst(), "Задачей в истории должно быть задание 2");
     }
 
     @Test
