@@ -1,5 +1,4 @@
 
-import manager.TaskManager;
 import manager.InMemoryTaskManager;
 import task.*;
 import util.Managers;
@@ -8,7 +7,7 @@ import util.Managers;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = Managers.getDefault();
+        InMemoryTaskManager taskManager = Managers.getDefaultInMemory();
 
         // Создаем две задачи
         Task firstTask = new Task("Первая задача", "Описание первой задачи", Status.NEW);
@@ -55,40 +54,42 @@ public class Main {
         taskManager.getEpicId(firstEpic.getTaskId());
         taskManager.getSubtaskId(firstSubtask.getTaskId());
 
-        printAllTasks((InMemoryTaskManager) taskManager);
+        printAllTasks(taskManager);
 
         System.out.println("Меняем статусы у простой задачи и подзадачи первого эпика");
         firstTask.setStatus(Status.IN_PROGRESS);
         taskManager.updateTask(firstTask);
         secondSubtask.setStatus(Status.IN_PROGRESS);
         taskManager.updateSubtask(secondSubtask);
-        printAllTasks((InMemoryTaskManager) taskManager);
+        printAllTasks(taskManager);
 
 
         System.out.println("Меняем статус у подзадачи второго эпика");
         thirdSubtask.setStatus(Status.DONE);
         taskManager.updateSubtask(thirdSubtask);
-        printAllTasks((InMemoryTaskManager) taskManager);
+        printAllTasks(taskManager);
 
         System.out.println("Меняем статус эпика");
         firstEpic.setStatus(Status.DONE);
         taskManager.updateEpic(firstEpic);
-        printAllTasks((InMemoryTaskManager) taskManager);
+        printAllTasks(taskManager);
 
         System.out.println("Получаем задачу по ID");
         Task task = taskManager.getTaskId(secondTask.getTaskId());
-        System.out.println(task);
+        Epic epic = taskManager.getEpicId(firstEpic.getTaskId());
+        Subtask subtask = taskManager.getSubtaskId(firstSubtask.getTaskId());
+        System.out.println(task + " \n" + epic + " \n" + subtask);
 
         System.out.println("вывод списка подклассов эпика");
         System.out.println(taskManager.getEpicSubtasks(firstEpic.getTaskId()));
 
         System.out.println("Удаляем подзадачу по ID");
         taskManager.deleteSubtaskId(secondEpic.getTaskId());
-        printAllTasks((InMemoryTaskManager) taskManager);
+        printAllTasks(taskManager);
 
         System.out.println("Удаляем эпик по ID");
         taskManager.deleteEpicId(firstEpic.getTaskId());
-        printAllTasks((InMemoryTaskManager) taskManager);
+        printAllTasks(taskManager);
 
         System.out.println("Список вызванных задач: ");
         System.out.println(taskManager.getHistory());
@@ -104,7 +105,7 @@ public class Main {
         System.out.println("Удаление всех задач...");
         taskManager.clearTask();
         taskManager.clearEpic();
-        printAllTasks((InMemoryTaskManager) taskManager);
+        printAllTasks(taskManager);
 
 
     }

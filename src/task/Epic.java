@@ -17,7 +17,11 @@ public class Epic extends Task {
     public Epic(String name, String description, Status status, Duration duration, LocalDateTime startTime) {
         super(name, description, status, duration, startTime);
         subtasksId = new ArrayList<>();
-        this.endTime = null;
+        if (duration != null && startTime != null) {
+            this.endTime = startTime.plus(duration);
+        } else {
+            this.endTime = null;
+        }
     }
 
     @Override
