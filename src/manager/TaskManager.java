@@ -34,11 +34,11 @@ public interface TaskManager {
 
     void updateSubtask(Subtask subtask);
 
-    int addTask(Task task);
+    void addTask(Task task);
 
-    int addSubtask(Subtask subtask);
+    void addSubtask(Subtask subtask);
 
-    int addEpic(Epic epic);
+    void addEpic(Epic epic);
 
     void deleteTaskId(int id);
 
@@ -47,4 +47,8 @@ public interface TaskManager {
     void deleteEpicId(int id);
 
     List<Task> getHistory();
+
+    boolean overlappingTask(Task task1, Task task2);
+
+    void updateEpicTime(Epic epic);
 }

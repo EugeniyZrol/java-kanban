@@ -1,5 +1,6 @@
 package manager;
 
+import exception.ManagerSaveException;
 import task.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -82,5 +83,15 @@ class FileBackedTaskManagerTest {
         FileBackedTaskManager newManager = FileBackedTaskManager.loadFromFile(file1.toPath());
         assertTrue(newManager.getTasks().isEmpty() && newManager.getSubtask().isEmpty() && newManager.getEpic().isEmpty());
         assertEquals(0, file.length());
+    }
+
+    @Test
+    public void testExceptionHandling() {
+        FileBackedTaskManager manager = new FileBackedTaskManager(Paths.get("testFile.txt"));
+
+        assertDoesNotThrow(manager::save);
+
+        // Попробуем загрузить файл, который не существует
+        assertThrows(ManagerSaveException.class, () -> FileBackedTaskManager.loadFromFile(Paths.get("nonExistentFile.txt")));
     }
 }
