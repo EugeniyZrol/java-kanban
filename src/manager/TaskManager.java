@@ -4,6 +4,7 @@ import task.Subtask;
 import task.Task;
 import  task.Epic;
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskManager {
 
@@ -22,11 +23,11 @@ public interface TaskManager {
 
     void clearSubtask();
 
-    Task getTaskId(Integer id);
+    Optional<Task> getTaskId(Integer id);
 
-    Epic getEpicId(Integer id);
+    Optional<Epic> getEpicId(Integer id);
 
-    Subtask getSubtaskId(Integer id);
+    Optional<Subtask> getSubtaskId(Integer id);
 
     void updateTask(Task task);
 
