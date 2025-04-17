@@ -81,15 +81,9 @@ public class Main {
         Optional<Task> optionalTask = taskManager.getTaskId(secondTask.getTaskId());
         Optional<Epic> optionalEpic = taskManager.getEpicId(firstEpic.getTaskId());
         Optional<Subtask> optionalSubtask = taskManager.getSubtaskId(firstSubtask.getTaskId());
-        optionalTask.ifPresent(task -> {
-            System.out.println("Задача найдена: " + task);
-        });
-        optionalEpic.ifPresent(epic -> {
-            System.out.println("Задача найдена: " + epic);
-        });
-        optionalSubtask.ifPresent(subtask -> {
-            System.out.println("Задача найдена: " + subtask);
-        });
+        optionalTask.ifPresent(task -> System.out.println("Задача найдена: " + task));
+        optionalEpic.ifPresent(epic -> System.out.println("Задача найдена: " + epic));
+        optionalSubtask.ifPresent(subtask -> System.out.println("Задача найдена: " + subtask));
 
 
 
