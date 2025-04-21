@@ -1,6 +1,7 @@
 package manager;
 
 import exception.ManagerSaveException;
+import exception.NotFoundException;
 import task.*;
 import util.Managers;
 
@@ -44,12 +45,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getEpic() {
+    public List<Epic> getEpic() {
         return new ArrayList<>(epics.values());
     }
 
     @Override
-    public List<Task> getSubtask() {
+    public List<Subtask> getSubtask() {
         return new ArrayList<>(subtasks.values());
 
     }
@@ -97,32 +98,48 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Optional<Task> getTaskId(Integer id) {
-        Task task = tasks.get(id);
-        if (task != null) {
-            historyManager.add(task);
-            return Optional.of(task);
+        try {
+            Task task = tasks.get(id);
+            if (task != null) {
+                historyManager.add(task);
+                return Optional.of(task);
+            } else {
+                throw new NotFoundException("Задача с идентификатором " + id + " не найдена");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("При извлечении задачи произошла ошибка: " + e.getMessage(), e);
         }
-        return Optional.empty();
     }
 
     @Override
     public Optional<Epic> getEpicId(Integer id) {
-        Epic epic = epics.get(id);
-        if (epic != null) {
-            historyManager.add(epic);
-            return Optional.of(epic);
+        try {
+            Epic epic = epics.get(id);
+            if (epic != null) {
+                historyManager.add(epic);
+                return Optional.of(epic);
+            } else {
+                throw new NotFoundException("Эпик с идентификатором " + id + " не найден");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("При извлечении эпика произошла ошибка: " + e.getMessage(), e);
         }
-        return Optional.empty();
     }
 
 
+    @Override
     public Optional<Subtask> getSubtaskId(Integer id) {
-        Subtask subtask = subtasks.get(id);
-        if (subtask != null) {
-            historyManager.add(subtask);
-            return Optional.of(subtask);
+        try {
+            Subtask subtask = subtasks.get(id);
+            if (subtask != null) {
+                historyManager.add(subtask);
+                return Optional.of(subtask);
+            } else {
+                throw new NotFoundException("Подзадача с идентификатором " + id + " не найдена");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("При извлечении подзадачи произошла ошибка: " + e.getMessage(), e);
         }
-        return Optional.empty();
     }
 
 
@@ -322,8 +339,8 @@ public class InMemoryTaskManager implements TaskManager {
         return (task1Start.isBefore(task2End) && task1End.isAfter(task2Start));
     }
 
+    @Override
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(prioritizedTasks);
     }
 }
-

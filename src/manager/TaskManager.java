@@ -11,9 +11,9 @@ public interface TaskManager {
 
     List<Task> getTasks();
 
-    List<Task> getEpic();
+    List<Epic> getEpic();
 
-    List<Task> getSubtask();
+    List<Subtask> getSubtask();
 
     List<Subtask> getEpicSubtasks(int epicId);
 
@@ -52,4 +52,6 @@ public interface TaskManager {
     boolean overlappingTask(Task task1, Task task2);
 
     void updateEpicTime(Epic epic);
+
+    List<Task> getPrioritizedTasks();
 }
