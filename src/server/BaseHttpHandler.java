@@ -37,9 +37,10 @@ public abstract class BaseHttpHandler {
         return new String(e.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
     }
 
-    protected Integer getIdFromPath (String[] pathParts){
+    protected Integer getIdFromPath(String[] pathParts) {
         if (pathParts.length > 2) {
             return Integer.parseInt(pathParts[2]);
-        } return null;
+        }
+        return null;
     }
 }
