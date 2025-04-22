@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import exception.ServerException;
 import manager.TaskManager;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.time.Duration;
@@ -30,13 +29,13 @@ public class HttpTaskServer {
                 .create();
         try {
             this.httpServer = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
+            createContexts();
         } catch (IOException exception) {
             throw new ServerException("Не удалось создать HTTP-сервер на порту " + PORT);
         }
     }
 
     public void start() {
-        createContexts();
         httpServer.start();
         System.out.println("Сервер запущен на порту " + PORT);
     }

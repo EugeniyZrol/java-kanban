@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import task.Epic;
 import task.Status;
 import task.Subtask;
+
 import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.time.Duration;
@@ -44,6 +45,25 @@ public class SubtaskHandlerTest extends HttpTaskManagerTasksTest {
     public void testGetNonExistentSubtask() throws IOException, InterruptedException {
         HttpResponse<String> response = sendGetRequest("http://localhost:8080/subtasks/999");
 
+        Assertions.assertEquals(404, response.statusCode());
+    }
+
+    @Test
+    public void testDeleteTask() throws IOException, InterruptedException {
+        Epic epic = new Epic("Test Epic", "Epic Description", Status.NEW);
+        manager.addEpic(epic);
+
+        Subtask subtask = new Subtask("Test Subtask", "Subtask Description", Status.NEW, Duration.ofMinutes(5), LocalDateTime.now(), epic.getTaskId());
+        manager.addSubtask(subtask);
+
+        HttpResponse<String> response = sendDeleteRequest("http://localhost:8080/subtasks/" + subtask.getTaskId());
+        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertTrue(manager.getTasks().isEmpty(), "Задача не была удалена");
+    }
+
+    @Test
+    public void testDeleteNonExistentTask() throws IOException, InterruptedException {
+        HttpResponse<String> response = sendDeleteRequest("http://localhost:8080/subtasks/999");
         Assertions.assertEquals(404, response.statusCode());
     }
 }

@@ -7,10 +7,7 @@ import exception.ManagerSaveException;
 import exception.NotFoundException;
 import manager.TaskManager;
 import task.Task;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +50,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
             String resp = gson.toJson(tasks);
             sendText(e, resp);
         } else if (pathParts.length == 3 && pathParts[1].equals("tasks")) {
-            int id = Integer.parseInt(pathParts[2]);
+            int id = getIdFromPath(pathParts);
             Optional<Task> taskOptional = manager.getTaskId(id);
             if (taskOptional.isPresent()) {
                 String response = gson.toJson(taskOptional.get());
@@ -67,15 +64,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handlePostRequest(HttpExchange e) throws IOException {
-        InputStream inputStream = e.getRequestBody();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, DEFAULT_CHARSET));
-        StringBuilder jsonBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            jsonBuilder.append(line);
-        }
-
-        String json = jsonBuilder.toString();
+        String json = readRequestBody(e);
         Task task = gson.fromJson(json, Task.class);
         try {
             if (task.getTaskId() == 0) {
@@ -92,7 +81,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
 
     private void handleDeleteRequest(HttpExchange e, String[] pathParts) throws IOException {
         if (pathParts.length == 3 && pathParts[1].equals("tasks")) {
-            int id = Integer.parseInt(pathParts[2]);
+            int id = getIdFromPath(pathParts);
             manager.deleteTaskId(id);
             sendText(e, "Задача удалена");
         } else {

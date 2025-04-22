@@ -222,26 +222,42 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskId(int id) {
-        tasks.remove(id);
-        historyManager.remove(id);
+        try {
+            if (tasks.remove(id) == null) {
+                throw new NotFoundException("Задача с идентификатором " + id + " не найдена");
+            }
+            historyManager.remove(id);
+        } catch (Exception exception) {
+            throw new RuntimeException("Ошибка при удалении задачи: " + exception.getMessage(), exception);
+        }
     }
 
     @Override
     public void deleteSubtaskId(int id) {
-        if (subtasks.get(id) != null) {
-            int epicId = subtasks.get(id).getEpicId();
+        try {
+            Subtask subtask = subtasks.get(id);
+            if (subtask == null) {
+                throw new NotFoundException("Подзадача с идентификатором " + id + " не найдена");
+            }
+            int epicId = subtask.getEpicId();
             Epic epic = epics.get(epicId);
             epic.removeSubtaskId(id);
             subtasks.remove(id);
             updateStatusOfEpic(epic);
             updateEpicTime(epic);
+
+            historyManager.remove(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при удалении подзадачи: " + e.getMessage(), e);
         }
-        historyManager.remove(id);
     }
 
     @Override
     public void deleteEpicId(int id) {
-        if (epics.containsKey(id)) {
+        try {
+            if (!epics.containsKey(id)) {
+                throw new NotFoundException("Эпик с идентификатором " + id + " не найден");
+            }
 
             for (Integer idSubtask : epics.get(id).getSubtaskId()) {
                 historyManager.remove(idSubtask);
@@ -250,6 +266,8 @@ public class InMemoryTaskManager implements TaskManager {
             epics.get(id).cleanSubtaskId();
             epics.remove(id);
             historyManager.remove(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при удалении эпика: " + e.getMessage(), e);
         }
     }
 

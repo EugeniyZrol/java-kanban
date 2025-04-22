@@ -53,4 +53,13 @@ public abstract class HttpTaskManagerTasksTest {
                 .build();
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
+
+    protected HttpResponse<String> sendDeleteRequest(String url) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .DELETE()
+                .build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
 }

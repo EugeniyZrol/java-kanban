@@ -7,10 +7,7 @@ import exception.ManagerSaveException;
 import exception.NotFoundException;
 import manager.TaskManager;
 import task.Subtask;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +51,7 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
             String resp = gson.toJson(subtasks);
             sendText(e, resp);
         } else if (pathParts.length == 3 && pathParts[1].equals("subtasks")) {
-            int id = Integer.parseInt(pathParts[2]);
+            int id = getIdFromPath(pathParts);
             Optional<Subtask> subtaskOptional = manager.getSubtaskId(id);
             if (subtaskOptional.isPresent()) {
                 String response = gson.toJson(subtaskOptional.get());
@@ -68,15 +65,7 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handlePostRequest(HttpExchange e) throws IOException {
-        InputStream inputStream = e.getRequestBody();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, DEFAULT_CHARSET));
-        StringBuilder jsonBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            jsonBuilder.append(line);
-        }
-
-        String json = jsonBuilder.toString();
+        String json = readRequestBody(e);
         Subtask subtask = gson.fromJson(json, Subtask.class);
         try {
             if (subtask.getTaskId() == 0) {
@@ -93,11 +82,13 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
 
     private void handleDeleteRequest(HttpExchange e, String[] pathParts) throws IOException {
         if (pathParts.length == 3 && pathParts[1].equals("subtasks")) {
-            int id = Integer.parseInt(pathParts[2]);
+            int id = getIdFromPath(pathParts);
             manager.deleteSubtaskId(id);
             sendText(e, "Подзадача удалена");
         } else {
             sendNotFound(e, "Недопустимый запрос");
         }
     }
+
+
 }

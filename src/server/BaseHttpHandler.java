@@ -1,6 +1,7 @@
 package server;
 
 import com.sun.net.httpserver.HttpExchange;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -30,5 +31,15 @@ public abstract class BaseHttpHandler {
         h.sendResponseHeaders(statusCode, resp.length);
         h.getResponseBody().write(resp);
         h.close();
+    }
+
+    protected String readRequestBody(HttpExchange e) throws IOException {
+        return new String(e.getRequestBody().readAllBytes(), DEFAULT_CHARSET);
+    }
+
+    protected Integer getIdFromPath (String[] pathParts){
+        if (pathParts.length > 2) {
+            return Integer.parseInt(pathParts[2]);
+        } return null;
     }
 }

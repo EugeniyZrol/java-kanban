@@ -8,11 +8,7 @@ import exception.NotFoundException;
 import manager.TaskManager;
 import task.Epic;
 import task.Subtask;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +51,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
             String resp = gson.toJson(epics);
             sendText(e, resp);
         } else if (pathParts.length == 3 && pathParts[1].equals("epics")) {
-            int id = Integer.parseInt(pathParts[2]);
+            int id = getIdFromPath(pathParts);
             Optional<Epic> epicOptional = manager.getEpicId(id);
             if (epicOptional.isPresent()) {
                 String response = gson.toJson(epicOptional.get());
@@ -74,15 +70,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handlePostRequest(HttpExchange e) throws IOException {
-        InputStream inputStream = e.getRequestBody();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, DEFAULT_CHARSET));
-        StringBuilder jsonBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            jsonBuilder.append(line);
-        }
-
-        String json = jsonBuilder.toString();
+        String json = readRequestBody(e);
         Epic epic = gson.fromJson(json, Epic.class);
         try {
             if (epic.getTaskId() == 0) {
@@ -99,7 +87,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
 
     private void handleDeleteRequest(HttpExchange e, String[] pathParts) throws IOException {
         if (pathParts.length == 3 && pathParts[1].equals("epics")) {
-            int id = Integer.parseInt(pathParts[2]);
+            int id = getIdFromPath(pathParts);
             manager.deleteEpicId(id);
             sendText(e, "Задача удалена");
         } else {

@@ -43,4 +43,20 @@ public class TaskHandlerTest extends HttpTaskManagerTasksTest {
 
         Assertions.assertEquals(404, response.statusCode());
     }
+
+    @Test
+    public void testDeleteTask() throws IOException, InterruptedException {
+        Task task = new Task("Test Task", "Description", Status.NEW, Duration.ofMinutes(5), LocalDateTime.now());
+        manager.addTask(task);
+
+        HttpResponse<String> response = sendDeleteRequest("http://localhost:8080/tasks/" + task.getTaskId());
+        Assertions.assertEquals(200, response.statusCode());
+        Assertions.assertTrue(manager.getTasks().isEmpty(), "Задача не была удалена");
+    }
+
+    @Test
+    public void testDeleteNonExistentTask() throws IOException, InterruptedException {
+        HttpResponse<String> response = sendDeleteRequest("http://localhost:8080/tasks/999");
+        Assertions.assertEquals(404, response.statusCode());
+    }
 }
