@@ -3,6 +3,8 @@ import manager.InMemoryTaskManager;
 import task.*;
 import util.Managers;
 
+import java.util.Optional;
+
 
 public class Main {
 
@@ -75,10 +77,15 @@ public class Main {
         printAllTasks(taskManager);
 
         System.out.println("Получаем задачу по ID");
-        Task task = taskManager.getTaskId(secondTask.getTaskId());
-        Epic epic = taskManager.getEpicId(firstEpic.getTaskId());
-        Subtask subtask = taskManager.getSubtaskId(firstSubtask.getTaskId());
-        System.out.println(task + " \n" + epic + " \n" + subtask);
+        System.out.println("Получаем задачу по ID");
+        Optional<Task> optionalTask = taskManager.getTaskId(secondTask.getTaskId());
+        Optional<Epic> optionalEpic = taskManager.getEpicId(firstEpic.getTaskId());
+        Optional<Subtask> optionalSubtask = taskManager.getSubtaskId(firstSubtask.getTaskId());
+        optionalTask.ifPresent(task -> System.out.println("Задача найдена: " + task));
+        optionalEpic.ifPresent(epic -> System.out.println("Задача найдена: " + epic));
+        optionalSubtask.ifPresent(subtask -> System.out.println("Задача найдена: " + subtask));
+
+
 
         System.out.println("вывод списка подклассов эпика");
         System.out.println(taskManager.getEpicSubtasks(firstEpic.getTaskId()));

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,25 +93,39 @@ public class InMemoryTaskManagerTest {
         Task task = new Task("Название задачи", "Описание", NEW);
         taskManager.addTask(task);
 
-        assertEquals(task, taskManager.getTaskId(task.getTaskId()));
+        // Используем Optional для проверки
+        assertTrue(taskManager.getTaskId(task.getTaskId()).isPresent());
+        assertEquals(task, taskManager.getTaskId(task.getTaskId()).get());
     }
 
     @Test
     void comparingFieldsAfterAddingManager() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
         taskManager.addTask(task);
-        assertEquals(task, taskManager.getTaskId(task.getTaskId()));
+
+        // Проверяем, что задача присутствует и сравниваем
+        Optional<Task> optionalTask = taskManager.getTaskId(task.getTaskId());
+        assertTrue(optionalTask.isPresent());
+        assertEquals(task, optionalTask.get());
     }
 
     @Test
     void checkTaskAndTaskHistory() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
+        Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
         taskManager.addTask(task);
-        assertEquals(Status.NEW, taskManager.getTaskId(1).getStatus());
-        assertEquals("Test addNewTask", taskManager.getTaskId(1).getName());
 
-        task = new Task("name", "descreption", Status.IN_PROGRESS);
+        // Проверяем, что задача существует и получаем её из Optional
+        Optional<Task> optionalTask = taskManager.getTaskId(1);
+        assertTrue(optionalTask.isPresent(), "Задача должна существовать");
+
+        Task retrievedTask = optionalTask.get(); // Получаем задачу
+        assertEquals(Status.NEW, retrievedTask.getStatus());
+        assertEquals("Test addNewTask", retrievedTask.getName());
+
+        task = new Task("name", "description", Status.IN_PROGRESS);
         taskManager.updateTask(task);
+
+        // Проверяем, что в истории сохранена старая задача
         assertEquals("Test addNewTask", taskManager.getHistory().getFirst().getName());
     }
 
